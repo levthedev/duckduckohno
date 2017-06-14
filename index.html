@@ -60,29 +60,18 @@
         var logo   = $("#logo_homepage_link");
         var cursor = $("#cursor");
         var search = $("#search_form_input_homepage");
-        var input  = $("#search_form_homepage");
+        var form  = $("#search_form_homepage");
 
         logo.css({"backgroundImage": "url(http://duckduckbordeaux.com/ddg.png)"});
         logo.css({"backgroundSize": "120px 120px"});
         logo.css({"height": "150px"});
         setTimeout(moveInput, 500);
-
-        function moveInput() {
-          var newCoords = generateCoordinates();
-          input.animate({ top: newCoords[0], left: newCoords[1] }, 5000, function() {
-            console.log(newCoords)
-            moveInput();
-          });
-        }
-
-        function generateCoordinates() {
-          var height    = $(window).height() - input.height();
-          var width     = $(window).width() - input.width();
-          var newHeight = Math.floor(Math.random() * height / 2);
-          var newWidth  = Math.floor(Math.random() * width / 2);
-
-          return [newHeight, newWidth];
-        }
+        form.submit(function(e) {
+          e = e || window.event;
+          e.preventDefault();
+          submit();
+          return false;
+        })
 
         window.onmousemove = function(e) {
           setTimeout(function() {
@@ -98,11 +87,36 @@
           e.preventDefault();
           if (e.keyCode === 32) {
             search.val(search.val() + " ");
+          } else if (e.keyCode === 13) {
+            submit()
           } else {
             search.val(search.val() + Math.random().toString(36).substring(2,3));
           }
           return false;
         })
+
+        function moveInput() {
+          var newCoords = generateCoordinates();
+          form.animate({ top: newCoords[0], left: newCoords[1] }, 5000, function() {
+            console.log(newCoords)
+            moveInput();
+          });
+        }
+
+        function generateCoordinates() {
+          var height    = $(window).height() - form.height();
+          var width     = $(window).width() - form.width();
+          var newHeight = Math.floor(Math.random() * height / 2);
+          var newWidth  = Math.floor(Math.random() * width / 2);
+
+          return [newHeight, newWidth];
+        }
+
+        function submit() {
+          var form = document.getElementById("search_form_homepage");
+          form.action = "https://duckduckgo.com/" + document.getElementById("search_form_input_homepage").value;
+          form.submit();
+        }
       });
     </script>
     <img src="./cursor.png" id="cursor"></img>
@@ -130,7 +144,7 @@
             <div class="tag-home">
               <div class="tag-home__wrapper">
                 <div class="tag-home__item">
-                  The search engine that doesn't care about you.
+                  The search engine that doesn't work very well.
                   <span class="hide--screen-xs"><a href="https://duckduckgo.com/about" class="tag-home__link">Learn More</a>.</span>
                 </div>
               </div>
